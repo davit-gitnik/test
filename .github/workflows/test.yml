@@ -1,0 +1,27 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - '*'  # Run on every branch
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract Branch Name
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Extract Repository Name
+        run: echo "REPO_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV
+
+      - name: Log in to Private Docker Registry
+        run: docker build -t ${{ secrets.DOCKER_REGISTRY_URL//https:/ }}/${{ env.REPO_NAME }}:${{ env.BRANCH_NAME }} .
+  
