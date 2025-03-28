@@ -22,5 +22,5 @@ jobs:
       - name: Extract Repository Name
         run: echo "REPO_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV
 
-      - name: Log in to Private Docker Registry
+      - name: Build
         run: docker build -t ${${{ secrets.DOCKER_REGISTRY_URL }}//https:/}/${{ env.REPO_NAME }}:${{ env.BRANCH_NAME }} .  
