@@ -20,12 +20,12 @@ jobs:
         run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Extract Repository Name
-        run: echo "REPO_NAME=$(basename $GITHUB_REPOSITORY)" >> $GITHUB_ENV
+        run: echo "REPO_NAME=$(basename $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV   
         
       - name: Extract Image Name
         run: |
-          IMAGE_NAME=$(echo ${{ secrets.DOCKER_REGISTRY_URL }} | sed 's/https:\/\///g') 
-          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          IMAGE_PATH=$(echo ${{ secrets.DOCKER_REGISTRY_URL }} | sed 's/https:\/\///g') 
+          echo "IMAGE_PATH=$IMAGE_PATH" >> $GITHUB_ENV
 
       - name: Build
-        run: docker build -t ${{ env.IMAGE_NAME }}/${{ env.REPO_NAME }}:${{ env.BRANCH_NAME }} .  
+        run: docker build -t ${{ env.IMAGE_PATH }}/${{ env.REPO_NAME }}:${{ env.BRANCH_NAME }} .  
